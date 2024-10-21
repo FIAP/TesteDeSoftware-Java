@@ -1,0 +1,9 @@
+<configuration>
+
+
+    <logger name="io.gatling.http.engine.response" level="DEBUG" />
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>

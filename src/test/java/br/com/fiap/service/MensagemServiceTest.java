@@ -28,7 +28,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class MensagemServiceTest {
+public class MensagemServiceTest extends  MensagemHelper {
 
     @Mock
     private MensagemRepository mensagemRepository;
@@ -52,7 +52,7 @@ public class MensagemServiceTest {
 
         @Test
         void devePermitirRegistrarMensagem() {
-            var mensagem = MensagemHelper.gerarMensagem();
+            var mensagem = gerarMensagem();
             when(mensagemRepository.save(any(Mensagem.class)))
                     .thenAnswer(i -> i.getArgument(0));
 
@@ -77,7 +77,7 @@ public class MensagemServiceTest {
         @Test
         void devePermitirObterMensagem() {
             var id = UUID.randomUUID();
-            var mensagem = MensagemHelper.gerarMensagem();
+            var mensagem = gerarMensagem();
             when(mensagemRepository.findById(any(UUID.class)))
                     .thenReturn(Optional.of(mensagem));
 
@@ -117,7 +117,7 @@ public class MensagemServiceTest {
         @Test
         void devePermirirAtualizarMensagem() {
             var id = UUID.randomUUID();
-            var mensagemAntiga = MensagemHelper.gerarMensagem();
+            var mensagemAntiga = gerarMensagem();
             mensagemAntiga.setId(id);
             var mensagemNova = mensagemAntiga;
             mensagemNova.setConteudo("abcd");
@@ -146,7 +146,7 @@ public class MensagemServiceTest {
         @Test
         void deveGerarExcecao_QuandoAtualizarMensagem_IdNaoCoincide() {
             var id = UUID.randomUUID();
-            var mensagemAntiga = MensagemHelper.gerarMensagem();
+            var mensagemAntiga = gerarMensagem();
             mensagemAntiga.setId(id);
             var mensagemNova = mensagemAntiga.toBuilder().build();
             mensagemNova.setId(UUID.randomUUID());
@@ -166,7 +166,7 @@ public class MensagemServiceTest {
         @Test
         void devePermitirRemoverMensagem() {
             var id = UUID.fromString("51fa607a-1e61-11ee-be56-0242ac120002");
-            var mensagem = MensagemHelper.gerarMensagem();
+            var mensagem = gerarMensagem();
             mensagem.setId(id);
             when(mensagemRepository.findById(id))
                     .thenReturn(Optional.of(mensagem));
@@ -189,8 +189,8 @@ public class MensagemServiceTest {
         @Test
         void devePermitirObterMensagens() {
             Page<Mensagem> page = new PageImpl<>(Arrays.asList(
-                    MensagemHelper.gerarMensagem(),
-                    MensagemHelper.gerarMensagem()
+                    gerarMensagem(),
+                    gerarMensagem()
             ));
 
             when(mensagemRepository.obterMensagens(any(Pageable.class)))

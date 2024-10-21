@@ -18,7 +18,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class MensagemRepositoryTest {
+public class MensagemRepositoryTest extends MensagemHelper {
 
     @Mock
     private MensagemRepository mensagemRepository;
@@ -27,7 +27,7 @@ public class MensagemRepositoryTest {
     AutoCloseable mock;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         mock = MockitoAnnotations.openMocks(this);
     }
 
@@ -38,9 +38,9 @@ public class MensagemRepositoryTest {
 
 
     @Test
-    void devePermitirRegistrarMensagem(){
+    void devePermitirRegistrarMensagem() {
         // Arrange - Preparar
-        var mensagem = MensagemHelper.gerarMensagem();
+        var mensagem = gerarMensagem();
         when(mensagemRepository.save(any(Mensagem.class))).thenReturn(mensagem);
         // Act - Atuar
         var mensagemArmazena = mensagemRepository.save(mensagem);
@@ -52,10 +52,10 @@ public class MensagemRepositoryTest {
     }
 
     @Test
-    void devePermitirConsultarMensagem(){
+    void devePermitirConsultarMensagem() {
         // Arrange
         var id = UUID.randomUUID();
-        var mensagem = MensagemHelper.gerarMensagem();
+        var mensagem = gerarMensagem();
         mensagem.setId(id);
 
         when(mensagemRepository.findById(any(UUID.class))).thenReturn(Optional.of(mensagem));
@@ -70,10 +70,10 @@ public class MensagemRepositoryTest {
     }
 
     @Test
-    void devePermitirApagarMensagem(){
+    void devePermitirApagarMensagem() {
         // Arrange
         var id = UUID.randomUUID();
-        var mensagem = MensagemHelper.gerarMensagem();
+        var mensagem = gerarMensagem();
         mensagem.setId(id);
 
         doNothing().when(mensagemRepository).deleteById(any(UUID.class));
@@ -84,7 +84,6 @@ public class MensagemRepositoryTest {
         // Assert
         verify(mensagemRepository, times(1)).deleteById(id);
     }
-
 
 
 }
