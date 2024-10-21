@@ -49,7 +49,7 @@ public class MensagemController {
             var mensagemEncontrada = mensagemService.obterMensagem(uid);
             return new ResponseEntity<>(mensagemEncontrada, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("ID Inválido");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID Inválido");
         } catch (MensagemNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -67,7 +67,7 @@ public class MensagemController {
             var mensagemAtualizada = mensagemService.atualizarMensagem(uuid, mensagem);
             return new ResponseEntity<>(mensagemAtualizada, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("ID inválido");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID inválido");
         } catch (MensagemNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -81,7 +81,7 @@ public class MensagemController {
             mensagemService.removerMensagem(uuid);
             return new ResponseEntity<>("mensagem removida", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("ID inválido");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID inválido");
         } catch (MensagemNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

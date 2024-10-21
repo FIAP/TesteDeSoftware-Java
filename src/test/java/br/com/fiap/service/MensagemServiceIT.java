@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.UUID;
@@ -46,6 +48,28 @@ public class MensagemServiceIT extends MensagemHelper{
     }
 
     @Test
+    void devePermirirAlterarMensagem() {
+        var mensagem = gerarMensagem();
+        var mensagemOriginal = mensagemService.registrarMensagem(mensagem);
+        var mensagemModificada = mensagemOriginal.toBuilder().build();
+        mensagemModificada.setConteudo("abcd");
+
+        var mensagemObtida = mensagemService.atualizarMensagem(mensagemOriginal.getId(),
+                mensagemModificada);
+
+        assertThat(mensagemObtida)
+                .isInstanceOf(Mensagem.class)
+                .isNotNull();
+        assertThat(mensagemObtida.getId())
+                .isEqualTo(mensagemModificada.getId());
+        assertThat(mensagemObtida.getUsuario())
+                .isEqualTo(mensagemModificada.getUsuario());
+        assertThat(mensagemObtida.getConteudo())
+                .isEqualTo(mensagemModificada.getConteudo());
+    }
+
+
+    @Test
     void devePermitirObterMensagem() {
         // Arrange
         var id = UUID.fromString("5f789b39-4295-42c1-a65b-cfca5b987db2");
@@ -72,4 +96,19 @@ public class MensagemServiceIT extends MensagemHelper{
         // Assert
         assertThat(mensagemRemovida).isTrue();
     }
+
+    @Test
+    void devePermitirObterMensagens() {
+        Page<Mensagem> mensagens = mensagemService.obterMensagens(Pageable.unpaged());
+
+        assertThat(mensagens).hasSize(3);
+        assertThat(mensagens.getContent())
+                .asList()
+                .allSatisfy(mensagem -> {
+                    assertThat(mensagem).isNotNull();
+                    assertThat(mensagem).isInstanceOf(Mensagem.class);
+                });
+    }
+
+
 }
